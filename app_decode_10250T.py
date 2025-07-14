@@ -4,9 +4,9 @@ import pandas as pd
 # Load CSV files
 @st.cache_data
 def load_data():
-    operator_df = pd.read_csv("NonIlluminatedPushbuttonOperator 1.csv", header=None)
-    color_df = pd.read_csv("NonIlluminatedPushbuttonButtonColor 1.csv", header=None)
-    circuit_df = pd.read_csv("NonIlluminatedPushbuttonCircuit 1.csv", header=None)
+    operator_df = pd.read_csv("NonIlluminatedPushbuttonOperator.csv", header=None)
+    color_df = pd.read_csv("NonIlluminatedPushbuttonButtonColor.csv", header=None)
+    circuit_df = pd.read_csv("NonIlluminatedPushbuttonCircuit.csv", header=None)
 
     # Convert to dictionaries
     operator_dict = {str(v).strip(): str(k).strip() for k, v in zip(operator_df.iloc[:, 1], operator_df.iloc[:, 0])}
