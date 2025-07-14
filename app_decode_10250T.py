@@ -23,7 +23,8 @@ def load_data():
 operator_lookup, color_lookup, circuit_lookup = load_data()
 
 # UI
-st.title("10250T Catalog Number Decoder")
+st.title("🔍 10250T Catalog Number Decoder")
+
 catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 or 10250T1121):")
 
 if catalog_input:
@@ -40,10 +41,17 @@ if catalog_input:
             color_label = color_lookup.get(color_code, "Unknown Color Code")
             circuit_label = circuit_lookup.get(circuit_code, "Unknown Circuit Code")
 
-            st.markdown("### 🔍 Decoded Result")
+            operator_pn = f"10250T{operator_code}{color_code}"
+            contact_block_pn = f"10250T{circuit_code}"
+
+            st.markdown("### ✅ Decoded Result")
             st.write(f"**Operator Type**: {operator_label}")
             st.write(f"**Button Color**: {color_label}")
             st.write(f"**Circuit Type**: {circuit_label}")
+
+            st.markdown("### 🧩 Component Part Numbers")
+            st.write(f"**Operator P/N**: `{operator_pn}`")
+            st.write(f"**Contact Block P/N**: `{contact_block_pn}`")
         else:
             st.error("Catalog number is too short to decode.")
     else:
