@@ -36,7 +36,7 @@ if catalog_input:
     # Try to convert alternate number
     mapped = alt_map.get(original_input, original_input)
     if mapped != original_input:
-    st.info(f"Alternate catalog number detected. Decoding as: `{mapped}`")
+        st.info(f"Alternate catalog number detected. Decoding as: `{mapped}`")
 
     # Normalize the mapped result (remove dash, uppercase)
     normalized = mapped.replace("-", "").strip().upper()
