@@ -24,7 +24,7 @@ def load_data():
                for _, row in alt_df.iterrows()}
 
     return operator_code_to_label, color_code_to_label, circuit_code_to_label, alt_map
-operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
+    operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
 
 # UI
 st.title("🔍 10250T Catalog Number Decoder")
