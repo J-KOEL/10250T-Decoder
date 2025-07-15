@@ -7,6 +7,7 @@ def load_data():
     operator_df = pd.read_csv("NonIlluminatedPushbuttonOperator.csv", header=None)
     color_df = pd.read_csv("NonIlluminatedPushbuttonButtonColor.csv", header=None)
     circuit_df = pd.read_csv("NonIlluminatedPushbuttonCircuit.csv", header=None)
+    alt_df = pd.read_csv("AlternateCatalogNumbers.csv")  # New file for alternate mappings
 
     # Convert to dictionaries
     operator_dict = {str(v).strip(): str(k).strip() for k, v in zip(operator_df.iloc[:, 1], operator_df.iloc[:, 0])}
@@ -18,9 +19,13 @@ def load_data():
     color_code_to_label = {v: k for k, v in color_dict.items()}
     circuit_code_to_label = {v: k for k, v in circuit_dict.items()}
 
-    return operator_code_to_label, color_code_to_label, circuit_code_to_label
+    # Alternate catalog number mapping
+    alt_map = {str(row['Alternate']).strip().upper(): str(row['Standard']).strip().upper()
+               for _, row in alt_df.iterrows()}
 
-operator_lookup, color_lookup, circuit_lookup = load_data()
+    return operator_code_to_label, color_code_to_label, circuit_code_to_label, alt_map
+
+operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
 
 # UI
 st.title("🔍 10250T Catalog Number Decoder")
@@ -28,7 +33,11 @@ st.title("🔍 10250T Catalog Number Decoder")
 catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 or 10250T1121):")
 
 if catalog_input:
-    normalized = catalog_input.replace("-", "").strip().upper()
+    original_input = catalog_input.replace("-", "").strip().upper()
+    normalized = alt_map.get(original_input, original_input)  # Convert alternate to standard if needed
+
+    if normalized != original_input:
+        st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
 
     if normalized.startswith("10250T") and len(normalized) > 7:
         code_part = normalized[6:]
