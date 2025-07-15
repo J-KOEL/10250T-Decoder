@@ -24,7 +24,6 @@ def load_data():
                for _, row in alt_df.iterrows()}
 
     return operator_code_to_label, color_code_to_label, circuit_code_to_label, alt_map
-
 operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
 
 # UI
@@ -34,10 +33,14 @@ catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 
 
 if catalog_input:
     original_input = catalog_input.replace("-", "").strip().upper()
-    normalized = alt_map.get(original_input, original_input)  # Convert alternate to standard if needed
 
-    if normalized != original_input:
-        st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
+    # If it's a 9-digit alternate number, try to convert it
+    if len(original_input) == 9:
+        normalized = alt_map.get(original_input, original_input)
+        if normalized != original_input:
+            st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
+    else:
+        normalized = original_input
 
     if normalized.startswith("10250T") and len(normalized) > 7:
         code_part = normalized[6:]
