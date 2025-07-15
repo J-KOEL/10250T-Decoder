@@ -27,7 +27,7 @@ operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
 
 st.title("🔍 10250T Catalog Number Decoder")
 
-catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 or 10250T1121):")
+catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 or 10250T30B):")
 
 if catalog_input:
     original_input = catalog_input.replace("-", "").strip().upper()
