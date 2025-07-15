@@ -7,8 +7,6 @@ def load_data():
     operator_df = pd.read_csv("NonIlluminatedPushbuttonOperator.csv", header=None)
     color_df = pd.read_csv("NonIlluminatedPushbuttonButtonColor.csv", header=None)
     circuit_df = pd.read_csv("NonIlluminatedPushbuttonCircuit.csv", header=None)
-    alt_df = pd.read_csv("AlternateCatalogNumbers.csv")
-    alt_map = {str(row['Alternate']).strip().upper(): str(row['Standard']).strip().upper() for _, row in alt_df.iterrows()}
 
     # Convert to dictionaries
     operator_dict = {str(v).strip(): str(k).strip() for k, v in zip(operator_df.iloc[:, 1], operator_df.iloc[:, 0])}
@@ -32,9 +30,6 @@ catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 
 if catalog_input:
     normalized = catalog_input.replace("-", "").strip().upper()
 
-    # Check if it's an alternate catalog number and convert it
-    normalized = alt_map.get(normalized, normalized)
-    
     if normalized.startswith("10250T") and len(normalized) > 7:
         code_part = normalized[6:]
         if len(code_part) >= 4:
