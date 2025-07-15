@@ -1,20 +1,18 @@
 import streamlit as st
 import pandas as pd
 
-# Load CSV files
 @st.cache_data
 def load_data():
     operator_df = pd.read_csv("NonIlluminatedPushbuttonOperator.csv", header=None)
     color_df = pd.read_csv("NonIlluminatedPushbuttonButtonColor.csv", header=None)
     circuit_df = pd.read_csv("NonIlluminatedPushbuttonCircuit.csv", header=None)
-    alt_df = pd.read_csv("AlternateCatalogNumbers.csv")  # New file for alternate mappings
+    alt_df = pd.read_csv("AlternateCatalogNumbers.csv")
 
     # Convert to dictionaries
     operator_dict = {str(v).strip(): str(k).strip() for k, v in zip(operator_df.iloc[:, 1], operator_df.iloc[:, 0])}
     color_dict = {str(v).strip(): str(k).strip() for k, v in zip(color_df.iloc[:, 1], color_df.iloc[:, 0])}
     circuit_dict = {str(v).strip(): str(k).strip() for k, v in zip(circuit_df.iloc[:, 1], circuit_df.iloc[:, 0])}
 
-    # Reverse lookup
     operator_code_to_label = {v: k for k, v in operator_dict.items()}
     color_code_to_label = {v: k for k, v in color_dict.items()}
     circuit_code_to_label = {v: k for k, v in circuit_dict.items()}
@@ -24,9 +22,9 @@ def load_data():
                for _, row in alt_df.iterrows()}
 
     return operator_code_to_label, color_code_to_label, circuit_code_to_label, alt_map
-    operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
 
-# UI
+operator_lookup, color_lookup, circuit_lookup, alt_map = load_data()
+
 st.title("🔍 10250T Catalog Number Decoder")
 
 catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 or 10250T1121):")
@@ -34,13 +32,10 @@ catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 
 if catalog_input:
     original_input = catalog_input.replace("-", "").strip().upper()
 
-    # If it's a 9-digit alternate number, try to convert it
-    if len(original_input) == 9:
-        normalized = alt_map.get(original_input, original_input)
-        if normalized != original_input:
-            st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
-    else:
-        normalized = original_input
+    # Try to convert alternate number
+    normalized = alt_map.get(original_input, original_input)
+    if normalized != original_input:
+        st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
 
     if normalized.startswith("10250T") and len(normalized) > 7:
         code_part = normalized[6:]
