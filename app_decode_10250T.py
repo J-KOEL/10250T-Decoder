@@ -32,10 +32,15 @@ catalog_input = st.text_input("Enter a 10250T catalog number (e.g., 10250T112-1 
 if catalog_input:
     original_input = catalog_input.replace("-", "").strip().upper()
 
+    
     # Try to convert alternate number
-    normalized = alt_map.get(original_input, original_input)
-    if normalized != original_input:
-        st.info(f"Alternate catalog number detected. Decoding as: `{normalized}`")
+    mapped = alt_map.get(original_input, original_input)
+    if mapped != original_input:
+    st.info(f"Alternate catalog number detected. Decoding as: `{mapped}`")
+
+    # Normalize the mapped result (remove dash, uppercase)
+    normalized = mapped.replace("-", "").strip().upper()
+
 
     if normalized.startswith("10250T") and len(normalized) > 7:
         code_part = normalized[6:]
